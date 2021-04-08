@@ -54,6 +54,7 @@ class IMAProtect:
         if (self._sessionid is None):
             self._update_sessionid()
 
+        jsonresponse = {}
         url = IMA_URL_ME % (str(int(time.time())),str(self._sessionid))
         response = self._session.get(url)
         if (response.status_code == 200):
