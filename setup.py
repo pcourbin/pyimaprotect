@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyimaprotect",
-    version="1.0.1",
+    version="1.0.2",
     author="pcourbin",
     author_email="pierre.courbin@gmail.com",
     description="Get alarm status and informations from the IMA Protect API.",

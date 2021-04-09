@@ -12,15 +12,15 @@ IMA_PK_JSONPATH = '$..hss_pk'
 IMA_STATUS_JSONPATH = '$..status'
 
 STATUS_IMA_TO_NUM = {
-    "on" : 2,
+    "off" : 0,
     "partial" : 1,
-    "off" : 0
+    "on" : 2
 }
 
 STATUS_NUM_TO_TEXT = {
-    0: "ON",
+    0: "OFF",
     1: "PARTIAL",
-    2: "OFF",
+    2: "ON",
     -1: "UNKNOWN"
 }
 

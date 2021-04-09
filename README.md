@@ -1,7 +1,8 @@
 # pyimaprotect - Python [IMA Protect Alarm](https://www.imaprotect.com/) **_UNOFFICIAL_**
 
-Get information from your [IMA Protect Alarm](https://www.imaprotect.com/).
-<!-- This work is originally developed for use with [Home Assistant](https://www.home-assistant.io/) and the *custom component* [imaprotect](https://github.com/pcourbin/imaprotect). -->
+Get information from your [IMA Protect Alarm](https://www.imaprotect.com/). It only allows to **get status**, **not to change** the status.
+This work is originally developed for use with [Home Assistant](https://www.home-assistant.io/) and the *custom component* [imaprotect](https://github.com/pcourbin/imaprotect).
+This work is based on the work of [lplancke](https://github.com/lplancke/jeedom_alarme_IMA) for [Jeedom](https://www.jeedom.com).
 
 ## Parameters
 
@@ -27,9 +28,9 @@ You can add properties using jsonpath, see method ``
 
 | Alarm Value | State |
 |:----:|:----:|
-| `0` | `ON` |
+| `0` | `OFF` |
 | `1` | `PARTIAL` |
-| `2` | `OFF` |
+| `2` | `ON` |
 | `-1` | `UNKNOWN` |
 
 ## Example
