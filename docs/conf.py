@@ -158,7 +158,4 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-
-
-extensions = ['myst_parser']
 html_static_path = []

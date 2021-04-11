@@ -1,6 +1,6 @@
-============
-pyimaprotect
-============
+===========================================================
+pyimaprotect - Python `IMA Protect Alarm`_ *UNOFFICIAL*
+===========================================================
 
 
 .. image:: https://img.shields.io/pypi/v/pyimaprotect.svg
