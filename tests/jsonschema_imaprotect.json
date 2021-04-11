@@ -1,0 +1,420 @@
+{
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"$id": "https://example.com/object1618178394.json", 
+	"title": "Root", 
+	"type": "array",
+	"default": [],
+	"items":{
+		"$id": "#root/items", 
+		"title": "Items", 
+		"type": "object",
+		"required": [
+			"pk",
+			"model",
+			"fields"
+		],
+		"properties": {
+			"pk": {
+				"$id": "#root/items/pk", 
+				"title": "Pk", 
+				"type": "integer",
+				"default": 0
+			},
+			"model": {
+				"$id": "#root/items/model", 
+				"title": "Model", 
+				"type": "string",
+				"default": "",
+				"pattern": "^.*$"
+			},
+			"fields": {
+				"$id": "#root/items/fields", 
+				"title": "Fields", 
+				"type": "object",
+				"required": [
+					"first_name",
+					"username",
+					"email",
+					"last_name",
+					"civility",
+					"contract_set"
+				],
+				"properties": {
+					"first_name": {
+						"$id": "#root/items/fields/first_name", 
+						"title": "First_name", 
+						"type": "string",
+						"default": "",
+						"pattern": "^.*$"
+					},
+					"username": {
+						"$id": "#root/items/fields/username", 
+						"title": "Username", 
+						"type": "string",
+						"default": "",
+						"pattern": "^.*$"
+					},
+					"email": {
+						"$id": "#root/items/fields/email", 
+						"title": "Email", 
+						"type": "string",
+						"default": "",
+						"pattern": "^.*$"
+					},
+					"last_name": {
+						"$id": "#root/items/fields/last_name", 
+						"title": "Last_name", 
+						"type": "string",
+						"default": "",
+						"pattern": "^.*$"
+					},
+					"civility": {
+						"$id": "#root/items/fields/civility", 
+						"title": "Civility", 
+						"type": "string",
+						"default": "",
+						"pattern": "^.*$"
+					},
+					"contract_set": {
+						"$id": "#root/items/fields/contract_set", 
+						"title": "Contract_set", 
+						"type": "array",
+						"default": [],
+						"items":{
+							"$id": "#root/items/fields/contract_set/items", 
+							"title": "Items", 
+							"type": "object",
+							"required": [
+								"pk",
+								"model",
+								"fields"
+							],
+							"properties": {
+								"pk": {
+									"$id": "#root/items/fields/contract_set/items/pk", 
+									"title": "Pk", 
+									"type": "integer",
+									"default": 0
+								},
+								"model": {
+									"$id": "#root/items/fields/contract_set/items/model", 
+									"title": "Model", 
+									"type": "string",
+									"default": "",
+									"pattern": "^.*$"
+								},
+								"fields": {
+									"$id": "#root/items/fields/contract_set/items/fields", 
+									"title": "Fields", 
+									"type": "object",
+									"required": [
+										"instructions_enabled",
+										"dashboard_config",
+										"orders_enabled",
+										"automation_enabled",
+										"alerts_enabled",
+										"legals_url",
+										"service_level",
+										"tos_url",
+										"tos_accepted",
+										"site",
+										"contract_number"
+									],
+									"properties": {
+										"instructions_enabled": {
+											"$id": "#root/items/fields/contract_set/items/fields/instructions_enabled", 
+											"title": "Instructions_enabled", 
+											"type": "boolean",
+											"default": true
+										},
+										"dashboard_config": {
+											"$id": "#root/items/fields/contract_set/items/fields/dashboard_config", 
+											"title": "Dashboard_config", 
+											"type": "object",
+											"required": [
+												"pk",
+												"model",
+												"fields"
+											],
+											"properties": {
+												"pk": {
+													"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/pk", 
+													"title": "Pk", 
+													"type": "integer",
+													"default": 0
+												},
+												"model": {
+													"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/model", 
+													"title": "Model", 
+													"type": "string",
+													"default": "",
+													"pattern": "^.*$"
+												},
+												"fields": {
+													"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields", 
+													"title": "Fields", 
+													"type": "object",
+													"required": [
+														"offer",
+														"equipment_brand",
+														"dashboard_item_set"
+													],
+													"properties": {
+														"offer": {
+															"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/offer", 
+															"title": "Offer", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"equipment_brand": {
+															"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/equipment_brand", 
+															"title": "Equipment_brand", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"dashboard_item_set": {
+															"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/dashboard_item_set", 
+															"title": "Dashboard_item_set", 
+															"type": "array",
+															"default": [],
+															"items":{
+																"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/dashboard_item_set/items", 
+																"title": "Items", 
+																"type": "object",
+																"required": [
+																	"pk",
+																	"model",
+																	"fields"
+																],
+																"properties": {
+																	"pk": {
+																		"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/dashboard_item_set/items/pk", 
+																		"title": "Pk", 
+																		"type": "integer",
+																		"default": 0
+																	},
+																	"model": {
+																		"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/dashboard_item_set/items/model", 
+																		"title": "Model", 
+																		"type": "string",
+																		"default": "",
+																		"pattern": "^.*$"
+																	},
+																	"fields": {
+																		"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/dashboard_item_set/items/fields", 
+																		"title": "Fields", 
+																		"type": "object",
+																		"required": [
+																			"order",
+																			"slug"
+																		],
+																		"properties": {
+																			"order": {
+																				"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/dashboard_item_set/items/fields/order", 
+																				"title": "Order", 
+																				"type": "integer",
+																				"default": 0
+																			},
+																			"slug": {
+																				"$id": "#root/items/fields/contract_set/items/fields/dashboard_config/fields/dashboard_item_set/items/fields/slug", 
+																				"title": "Slug", 
+																				"type": "string",
+																				"default": "",
+																				"pattern": "^.*$"
+																			}
+																		}
+																	}
+
+																}
+															}
+
+														}
+													}
+												}
+
+											}
+										}
+,
+										"orders_enabled": {
+											"$id": "#root/items/fields/contract_set/items/fields/orders_enabled", 
+											"title": "Orders_enabled", 
+											"type": "boolean",
+											"default": true
+										},
+										"automation_enabled": {
+											"$id": "#root/items/fields/contract_set/items/fields/automation_enabled", 
+											"title": "Automation_enabled", 
+											"type": "boolean",
+											"default": true
+										},
+										"alerts_enabled": {
+											"$id": "#root/items/fields/contract_set/items/fields/alerts_enabled", 
+											"title": "Alerts_enabled", 
+											"type": "boolean",
+											"default": true
+										},
+										"legals_url": {
+											"$id": "#root/items/fields/contract_set/items/fields/legals_url", 
+											"title": "Legals_url", 
+											"type": "string",
+											"default": "",
+											"pattern": "^.*$"
+										},
+										"service_level": {
+											"$id": "#root/items/fields/contract_set/items/fields/service_level", 
+											"title": "Service_level", 
+											"type": "string",
+											"default": "",
+											"pattern": "^.*$"
+										},
+										"tos_url": {
+											"$id": "#root/items/fields/contract_set/items/fields/tos_url", 
+											"title": "Tos_url", 
+											"type": "string",
+											"default": "",
+											"pattern": "^.*$"
+										},
+										"tos_accepted": {
+											"$id": "#root/items/fields/contract_set/items/fields/tos_accepted", 
+											"title": "Tos_accepted", 
+											"type": "boolean",
+											"default": true
+										},
+										"site": {
+											"$id": "#root/items/fields/contract_set/items/fields/site", 
+											"title": "Site", 
+											"type": "object",
+											"required": [
+												"pk",
+												"model",
+												"fields"
+											],
+											"properties": {
+												"pk": {
+													"$id": "#root/items/fields/contract_set/items/fields/site/pk", 
+													"title": "Pk", 
+													"type": "integer",
+													"default": 0
+												},
+												"model": {
+													"$id": "#root/items/fields/contract_set/items/fields/site/model", 
+													"title": "Model", 
+													"type": "string",
+													"default": "",
+													"pattern": "^.*$"
+												},
+												"fields": {
+													"$id": "#root/items/fields/contract_set/items/fields/site/fields", 
+													"title": "Fields", 
+													"type": "object",
+													"required": [
+														"address_2",
+														"partner_name",
+														"hss_pk",
+														"address_1",
+														"postal_code",
+														"picture_url",
+														"address_3",
+														"branding_logo_url",
+														"name",
+														"city_name"
+													],
+													"properties": {
+														"address_2": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/address_2", 
+															"title": "Address_2", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"partner_name": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/partner_name", 
+															"title": "Partner_name", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"hss_pk": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/hss_pk", 
+															"title": "Hss_pk", 
+															"type": "integer",
+															"default": 0
+														},
+														"address_1": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/address_1", 
+															"title": "Address_1", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"postal_code": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/postal_code", 
+															"title": "Postal_code", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"picture_url": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/picture_url", 
+															"title": "Picture_url", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"address_3": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/address_3", 
+															"title": "Address_3", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"branding_logo_url": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/branding_logo_url", 
+															"title": "Branding_logo_url", 
+															"type": "null",
+															"default": null
+														},
+														"name": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/name", 
+															"title": "Name", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														},
+														"city_name": {
+															"$id": "#root/items/fields/contract_set/items/fields/site/fields/city_name", 
+															"title": "City_name", 
+															"type": "string",
+															"default": "",
+															"pattern": "^.*$"
+														}
+													}
+												}
+
+											}
+										}
+,
+										"contract_number": {
+											"$id": "#root/items/fields/contract_set/items/fields/contract_number", 
+											"title": "Contract_number", 
+											"type": "string",
+											"default": "",
+											"pattern": "^.*$"
+										}
+									}
+								}
+
+							}
+						}
+
+					}
+				}
+			}
+
+		}
+	}
+
+}
