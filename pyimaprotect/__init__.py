@@ -2,7 +2,7 @@
 
 __author__ = """Pierre COURBIN"""
 __email__ = 'pierre.courbin@gmail.com'
-__version__ = '1.0.4'
+__version__ = '1.1.0'
 
 import requests
 import time
