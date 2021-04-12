@@ -6,6 +6,9 @@ pyimaprotect - Python `IMA Protect Alarm`_ *UNOFFICIAL*
 .. image:: https://img.shields.io/pypi/v/pyimaprotect.svg
         :target: https://pypi.python.org/pypi/pyimaprotect
 
+.. image:: https://img.shields.io/pypi/pyversions/pyimaprotect.svg
+        :target: https://pypi.python.org/pypi/pyimaprotect
+
 .. image:: https://img.shields.io/travis/pcourbin/pyimaprotect.svg
         :target: https://travis-ci.com/pcourbin/pyimaprotect
 
