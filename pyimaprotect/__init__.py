@@ -66,14 +66,12 @@ class IMAProtect:
         if (response.status_code == 200):
             jsonresponse = json.loads(response.content)
             self._update_info(jsonresponse)
-        elif (response.status_code == 404):
+        else:
             if (retry):
                 self._update_sessionid()
                 self.get_all_info(False)
             else:
-                _LOGGER.error("Can't connect to the IMAProtect API, step 'ME'")
-        else:
-            _LOGGER.error("Can't connect to the IMAProtect API, step 'ME'")
+                _LOGGER.error("Can't connect to the IMAProtect API, step 'ME'. Response code: %d" % (response.status_code))
 
         return jsonresponse
 
@@ -95,13 +93,16 @@ class IMAProtect:
                 self.get_all_info()
                 status = self.get_status(False)
             else:
-                _LOGGER.error("Can't connect to the IMAProtect API, step 'PK'")
+                _LOGGER.error("Can't connect to the IMAProtect API, step 'PK'. Response code: %d" % (response.status_code))
+        else:
+            _LOGGER.error("Can't connect to the IMAProtect API, step 'PK'. Response code: %d" % (response.status_code))
 
         return status
 
     def _update_sessionid(self):
         url = IMA_URL_LOGIN
         login = {'username': self._username, 'password': self._password}
+        self._session = requests.Session()
         response = self._session.post(url, data=login)
         if (response.status_code == 200):
             self._sessionid = self._session.cookies.get_dict().get('sessionid')
