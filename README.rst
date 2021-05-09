@@ -33,29 +33,17 @@ This work is originally developed for use with `Home Assistant`_ and the *custom
 Features
 --------
 
+Since the last update of IMAProtect "API" (05/2021), for now, this plugin only allows you to get the status of your alarm.
+
 Parameters
 ==========
 
-- `username`: Username used to connect to https://pilotageadistance.imateleassistance.com
-- `password`: Password used to connect to https://pilotageadistance.imateleassistance.com
-
-Properties
-==========
-
-- `first_name`: Firstname used in your contract
-- `last_name`: Lastname used in your contract
-- `email`: Email used in your contract
-- `offer`: Offercurrently defined in your contract. Example: `tout-inclus`
-- `contract_number`: Reference number of your contract
-- `alerts_enabled`: Indicates whether the alarm is currently triggered (Boolean).
-
-You can add properties using jsonpath, see method `add_property`
+- `username`: Username used to connect to https://www.imaprotect.com/
+- `password`: Password used to connect to https://www.imaprotect.com/
 
 Methods
 =======
 
-- `get_all_info`: return the full JSON from the IMA Protect API "me" endpoint.
-- `add_property`: allow to add a property to your object. This property will be stored the first time the API is called and each time you call `get_all_info`.
 - `get_status`: return the current status of your IMA Protect Alarm. See next table to understand the values returned.
 
 .. list-table:: List of Alarm status values
@@ -76,7 +64,7 @@ Methods
 Credits
 -------
 
-| This work is based on the work of `lplancke`_ for `Jeedom`_.
+| This work was based on the work of `lplancke`_ for `Jeedom`_.
 | This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
 
