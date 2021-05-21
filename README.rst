@@ -20,6 +20,9 @@ pyimaprotect - Python `IMA Protect Alarm`_ *UNOFFICIAL*
      :target: https://pyup.io/repos/github/pcourbin/pyimaprotect/
      :alt: Updates
 
+.. image:: https://codecov.io/gh/pcourbin/pyimaprotect/branch/main/graph/badge.svg
+     :target: https://codecov.io/gh/pcourbin/pyimaprotect
+
 .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen
      :target: `pre-commit`_
      :alt: pre-commit
