@@ -2,6 +2,8 @@
 """Tests for `pyimaprotect` package."""
 import logging
 import os
+import shutil
+from os import path
 from pyimaprotect import cli
 from pyimaprotect import IMAProtect
 from pyimaprotect.exceptions import IMAProtectConnectError
@@ -22,7 +24,7 @@ def test_connexion():
     if IMA_PASSWORD != "":
         ima = IMAProtect(IMA_USERNAME, IMA_PASSWORD)
         try:
-            imastatus = ima.get_status()
+            imastatus = ima.status
         except IMAProtectConnectError:
             connected = False
         except:
@@ -31,10 +33,41 @@ def test_connexion():
         assert connected
         assert imastatus is not None
         assert imastatus >= -1 and imastatus <= 3
+        assert ima.username == IMA_USERNAME
     else:
         _LOGGER.warning(
             """No login/password defined in environement variable for IMA Protect Alarm.
 Test 'connexion' not started."""
+        )
+
+
+def test_contact_list():
+    """Test JSONSchema return by IMA Protect API."""
+    if IMA_PASSWORD != "":
+        ima = IMAProtect(IMA_USERNAME, IMA_PASSWORD)
+
+        assert len(ima.get_contact_list()) > 0
+    else:
+        _LOGGER.warning(
+            """No login/password defined in environement variable for IMA Protect Alarm.
+Test 'contact_list' not started."""
+        )
+
+
+def test_download_image():
+    """Test JSONSchema return by IMA Protect API."""
+    if IMA_PASSWORD != "":
+        ima = IMAProtect(IMA_USERNAME, IMA_PASSWORD)
+        ima.download_images()
+        assert path.exists("Images/")
+        shutil.rmtree("Images/")
+        ima.download_images("MyImages/")
+        assert path.exists("MyImages/")
+        shutil.rmtree("MyImages/")
+    else:
+        _LOGGER.warning(
+            """No login/password defined in environement variable for IMA Protect Alarm.
+Test 'contact_list' not started."""
         )
 
 
