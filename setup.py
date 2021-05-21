@@ -55,6 +55,6 @@ setup(
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/pcourbin/pyimaprotect",
-    version="2.0.0",
+    version="3.0.0",
     zip_safe=False,
 )
