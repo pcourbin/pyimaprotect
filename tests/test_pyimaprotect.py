@@ -34,6 +34,7 @@ def test_connexion():
         assert imastatus is not None
         assert imastatus >= -1 and imastatus <= 3
         assert ima.username == IMA_USERNAME
+        ima.logout()
     else:
         _LOGGER.warning(
             """No login/password defined in environement variable for IMA Protect Alarm.
@@ -47,6 +48,7 @@ def test_contact_list():
         ima = IMAProtect(IMA_USERNAME, IMA_PASSWORD)
 
         assert len(ima.get_contact_list()) > 0
+        ima.logout()
     else:
         _LOGGER.warning(
             """No login/password defined in environement variable for IMA Protect Alarm.
@@ -54,7 +56,7 @@ Test 'contact_list' not started."""
         )
 
 
-def test_download_image():
+def test_images():
     """Test JSONSchema return by IMA Protect API."""
     if IMA_PASSWORD != "":
         ima = IMAProtect(IMA_USERNAME, IMA_PASSWORD)
@@ -64,10 +66,28 @@ def test_download_image():
         ima.download_images("MyImages/")
         assert path.exists("MyImages/")
         shutil.rmtree("MyImages/")
+        assert type(ima.get_images_list()) is dict
+        ima.logout()
     else:
         _LOGGER.warning(
             """No login/password defined in environement variable for IMA Protect Alarm.
 Test 'contact_list' not started."""
+        )
+
+
+def test_change_status():
+    """Test JSONSchema return by IMA Protect API."""
+    if IMA_PASSWORD != "":
+        ima = IMAProtect(IMA_USERNAME, IMA_PASSWORD)
+        current = ima.status
+        ima.status = current
+        assert ima.status == current
+        ima.logout()
+
+    else:
+        _LOGGER.warning(
+            """No login/password defined in environement variable for IMA Protect Alarm.
+Test 'change_status' not started."""
         )
 
 

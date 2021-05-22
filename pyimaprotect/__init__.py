@@ -71,7 +71,7 @@ class IMAProtect:
                 "Can't connect/read to the IMAProtect API. Response code: %d"
                 % (response.status_code)
             )
-            raise IMAProtectConnectError
+            raise IMAProtectConnectError(response.status_code, response.text)
 
         return status
 
@@ -151,7 +151,7 @@ class IMAProtect:
                     """Can't connect to the IMAProtect Website, step 'Login'.
                     Please, check your logins. You must be able to login on https://www.imaprotect.com."""
                 )
-                raise IMAProtectConnectError
+                raise IMAProtectConnectError(response.status_code, response.text)
             elif response.status_code == 200:
                 token_search = re.findall(RE_ALARM_TOKEN, response.text)
                 if len(token_search) > 0:
@@ -164,7 +164,7 @@ class IMAProtect:
                     )
             else:
                 self._session = None
-                raise IMAProtectConnectError
+                raise IMAProtectConnectError(response.status_code, response.text)
 
         return self._session
 
@@ -178,4 +178,4 @@ class IMAProtect:
             _LOGGER.error(
                 """Can't disconnect to the IMAProtect Website, step 'Logout'."""
             )
-            raise IMAProtectConnectError
+            raise IMAProtectConnectError(response.status_code, response.text)
