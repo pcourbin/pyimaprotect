@@ -108,9 +108,11 @@ Parameters
 Methods
 =======
 
+- `login()`: open a session with the IMA Protect Alarm website
+- `logout()`: close the session with the IMA Protect Alarm website
 - `status`: property to get or set the status of your IMA Protect Alarm. See the next table to understand the values.
-- `get_contact_list`: get a JSON with the list and information about your registered contacts.
-- `download_images`: download the images/photos taken with your connected elements.
+- `get_contact_list()`: get a JSON with the list and information about your registered contacts.
+- `download_images()`: download the images/photos taken with your connected elements.
 
 .. list-table:: List of Alarm status values
    :widths: auto

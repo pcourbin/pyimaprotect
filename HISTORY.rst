@@ -2,6 +2,11 @@
 History
 =======
 
+3.1.0 (2021-05-22)
+------------------
+* Add cookie expire usage to reduce the number of login
+* Add a logout function
+
 3.0.0 (2021-05-22)
 ------------------
 
