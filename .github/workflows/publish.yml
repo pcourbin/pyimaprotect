@@ -1,24 +1,22 @@
-name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+name: Publish 📦 to PyPI and TestPyPI
 
 on:
-    push:
+    release:
+        types: [created]
     # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
 
 jobs:
-    build:
-        name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    upload:
+        name: Build and publish 📦 to PyPI and TestPyPI
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
 
         steps:
             - uses: actions/checkout@v2
-            - name: Set up Python ${{ matrix.python-version }}
+            - name: Set up Python 3.9
               uses: actions/setup-python@v2
               with:
-                  python-version: ${{ matrix.python-version }}
+                  python-version: 3.9
             - name: Install dependencies
               run: |
                   # Upgrade pip
@@ -30,13 +28,7 @@ jobs:
             - name: Build and Install package
               run: |
                   # Build the packages
-                  python setup.py sdist
-                  python setup.py bdist_wheel
-                  # Install the package from setup.py
-                  python setup.py install
-
-            - name: Tests with tox
-              run: tox
+                  python setup.py sdist bdist_wheel
 
             - name: Publish distribution 📦 to Test PyPI
               uses: pypa/gh-action-pypi-publish@master

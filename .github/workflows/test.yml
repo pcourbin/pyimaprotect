@@ -1,0 +1,36 @@
+name: Test Python 🐍 package
+
+on:
+    push:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: Build and test
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Install dependencies
+              run: |
+                  # Upgrade pip
+                  python -m pip install --upgrade pip
+                  # Install build deps
+                  pip install tox-gh-actions
+                  # If requirements.txt exists, install from it
+                  if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
+            - name: Install package
+              run: |
+                  # Install the package from setup.py
+                  python setup.py install
+
+            - name: Tests with tox
+              run: tox
