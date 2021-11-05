@@ -2,6 +2,11 @@
 History
 =======
 
+3.1.1 (2021-11-05)
+------------------
+* Update login procedure according to new IMAProtect "API"
+* Update download images procedure according to new IMAProtect "API"
+
 3.1.0 (2021-05-22)
 ------------------
 * Add cookie expire usage to reduce the number of login

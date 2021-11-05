@@ -19,7 +19,8 @@ _LOGGER = logging.getLogger(__name__)
 def invert_dict(current_dict: dict):
     return {v: k for k, v in current_dict.items()}
 
-
+IMA_URL_PRELOGIN = "https://www.imaprotect.com/fr/client/login"
+RE_PRELOGIN_TOKEN = 'name="_csrf_token" value="(.*)" >'
 IMA_URL_LOGIN = "https://www.imaprotect.com/fr/client/login_check"
 IMA_URL_LOGOUT = "https://www.imaprotect.com/fr/client/logout"
 IMA_URL_STATUS = "https://www.imaprotect.com/fr/client/management/status"
@@ -41,6 +42,7 @@ class IMAProtect:
         self._username = username
         self._password = password
         self._session = None
+        self._token_login = None
         self._token_status = None
         self._expire = datetime.now()
 
@@ -124,7 +126,8 @@ class IMAProtect:
                         + "/"
                         + camera["type"]
                         + "_"
-                        + os.path.basename(image),
+                        + os.path.splitext(os.path.basename(image))[0]
+                        + ".jpg",
                         "wb",
                     ) as f:
                         f.write(r.content)
@@ -138,33 +141,52 @@ class IMAProtect:
 
     def login(self, force: bool = False):
         if force or self._session is None or self._expire < datetime.now():
-            url = IMA_URL_LOGIN
-            login = {"_username": self._username, "_password": self._password}
             self._session = requests.Session()
-            response = self._session.post(url, data=login)
-            for cookie in self._session.cookies:
-                if cookie.name == IMA_COOKIENAME_EXPIRE:
-                    self._expire = datetime.fromtimestamp(cookie.expires)
 
-            if response.status_code == 400:
-                _LOGGER.error(
-                    """Can't connect to the IMAProtect Website, step 'Login'.
-                    Please, check your logins. You must be able to login on https://www.imaprotect.com."""
-                )
-                raise IMAProtectConnectError(response.status_code, response.text)
-            elif response.status_code == 200:
-                token_search = re.findall(RE_ALARM_TOKEN, response.text)
+            url = IMA_URL_PRELOGIN
+            response = self._session.get(IMA_URL_PRELOGIN)
+            if response.status_code == 200:
+                token_search = re.findall(RE_PRELOGIN_TOKEN, re.sub(' +', ' ', response.text.replace("\n", "")))
                 if len(token_search) > 0:
-                    self._token_status = token_search[0]
+                    self._token_login = token_search[0]
                 else:
-                    self._token_status = None
+                    self._token_login = None
                     _LOGGER.error(
-                        """Can't get the token to change the status, step 'Login/TokenStatus'.
-                        Please, check your logins. You must be able to login on https://www.imaprotect.com."""
+                        """Can't get the token to login, step 'Login/TokenLogin'.
+                        Please, contact the developer."""
                     )
             else:
                 self._session = None
                 raise IMAProtectConnectError(response.status_code, response.text)
+
+            if (self._token_login is not None):
+                url = IMA_URL_LOGIN
+                login = {"_username": self._username, "_password": self._password, "_csrf_token": self._token_login}
+                
+                response = self._session.post(url, data=login)
+                for cookie in self._session.cookies:
+                    if cookie.name == IMA_COOKIENAME_EXPIRE:
+                        self._expire = datetime.fromtimestamp(cookie.expires)
+
+                if response.status_code == 400:
+                    _LOGGER.error(
+                        """Can't connect to the IMAProtect Website, step 'Login'.
+                        Please, check your logins. You must be able to login on https://www.imaprotect.com."""
+                    )
+                    raise IMAProtectConnectError(response.status_code, response.text)
+                elif response.status_code == 200:
+                    token_search = re.findall(RE_ALARM_TOKEN, response.text)
+                    if len(token_search) > 0:
+                        self._token_status = token_search[0]
+                    else:
+                        self._token_status = None
+                        _LOGGER.error(
+                            """Can't get the token to read the status, step 'Login/TokenStatus'.
+                            Please, check your logins. You must be able to login on https://www.imaprotect.com."""
+                        )
+                else:
+                    self._session = None
+                    raise IMAProtectConnectError(response.status_code, response.text)
 
         return self._session
 
