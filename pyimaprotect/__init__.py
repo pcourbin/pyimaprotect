@@ -19,6 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 def invert_dict(current_dict: dict):
     return {v: k for k, v in current_dict.items()}
 
+
 IMA_URL_PRELOGIN = "https://www.imaprotect.com/fr/client/login"
 RE_PRELOGIN_TOKEN = 'name="_csrf_token" value="(.*)" >'
 IMA_URL_LOGIN = "https://www.imaprotect.com/fr/client/login_check"
@@ -146,7 +147,10 @@ class IMAProtect:
             url = IMA_URL_PRELOGIN
             response = self._session.get(IMA_URL_PRELOGIN)
             if response.status_code == 200:
-                token_search = re.findall(RE_PRELOGIN_TOKEN, re.sub(' +', ' ', response.text.replace("\n", "")))
+                token_search = re.findall(
+                    RE_PRELOGIN_TOKEN,
+                    re.sub(" +", " ", response.text.replace("\n", "")),
+                )
                 if len(token_search) > 0:
                     self._token_login = token_search[0]
                 else:
@@ -159,10 +163,14 @@ class IMAProtect:
                 self._session = None
                 raise IMAProtectConnectError(response.status_code, response.text)
 
-            if (self._token_login is not None):
+            if self._token_login is not None:
                 url = IMA_URL_LOGIN
-                login = {"_username": self._username, "_password": self._password, "_csrf_token": self._token_login}
-                
+                login = {
+                    "_username": self._username,
+                    "_password": self._password,
+                    "_csrf_token": self._token_login,
+                }
+
                 response = self._session.post(url, data=login)
                 for cookie in self._session.cookies:
                     if cookie.name == IMA_COOKIENAME_EXPIRE:
