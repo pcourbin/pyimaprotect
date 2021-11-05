@@ -16,4 +16,3 @@ jsonpath_ng==1.5.2
 python-dotenv==0.17.0
 pre-commit
 reorder-python-imports
-black
