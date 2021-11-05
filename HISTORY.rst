@@ -2,7 +2,7 @@
 History
 =======
 
-3.1.1 (2021-11-05)
+3.1.2 (2021-11-05)
 ------------------
 * Update login procedure according to new IMAProtect "API"
 * Update download images procedure according to new IMAProtect "API"
