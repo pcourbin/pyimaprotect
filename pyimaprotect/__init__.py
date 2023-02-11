@@ -21,7 +21,7 @@ def invert_dict(current_dict: dict):
 
 
 IMA_URL_PRELOGIN = "https://www.imaprotect.com/fr/client/login"
-RE_PRELOGIN_TOKEN = 'name="_csrf_token" value="(.*)" >'
+RE_PRELOGIN_TOKEN = 'name="_csrf_token" value="(.*)" *>'
 IMA_URL_LOGIN = "https://www.imaprotect.com/fr/client/login_check"
 IMA_URL_LOGOUT = "https://www.imaprotect.com/fr/client/logout"
 IMA_URL_STATUS = "https://www.imaprotect.com/fr/client/management/status"
@@ -149,7 +149,7 @@ class IMAProtect:
             if response.status_code == 200:
                 token_search = re.findall(
                     RE_PRELOGIN_TOKEN,
-                    re.sub(" +", " ", response.text.replace("\n", "")),
+                    re.sub(" +", " ", response.text),
                 )
                 if len(token_search) > 0:
                     self._token_login = token_search[0]
