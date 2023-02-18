@@ -2,6 +2,10 @@
 History
 =======
 
+3.1.5 (2023-02-18)
+------------------
+* Update login procedure according to new IMAProtect "API", thanks to `@Thesola10`_
+
 3.1.2 (2021-11-05)
 ------------------
 * Update login procedure according to new IMAProtect "API"
@@ -31,3 +35,7 @@ History
 ------------------
 
 * First release on PyPI.
+
+
+
+.. _`@Thesola10`: https://github.com/Thesola10
