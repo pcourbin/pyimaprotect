@@ -27,7 +27,7 @@ IMA_URL_LOGOUT = "https://www.imaprotect.com/fr/client/logout"
 IMA_URL_STATUS = "https://www.imaprotect.com/fr/client/management/status"
 IMA_URL_CONTACTLIST = "https://www.imaprotect.com/fr/client/contact/list"
 IMA_URL_IMAGES = "https://www.imaprotect.com/fr/client/management/captureList"
-RE_ALARM_TOKEN = 'alarm-status ref="myAlarm" data-token="(.*)"'
+RE_ALARM_TOKEN = 'ref="myAlarm" data-token="(.*)"'
 IMA_CONTACTLIST_JSONPATH = "$..contactList"
 IMA_COOKIENAME_EXPIRE = "imainternational"
 
