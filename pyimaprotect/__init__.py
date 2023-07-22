@@ -19,15 +19,15 @@ _LOGGER = logging.getLogger(__name__)
 def invert_dict(current_dict: dict):
     return {v: k for k, v in current_dict.items()}
 
-
-IMA_URL_PRELOGIN = "https://www.imaprotect.com/fr/client/login"
+IMA_URL_ROOT = "https://www.imaprotect.com"
+IMA_URL_PRELOGIN = IMA_URL_ROOT + "/fr/client/login"
 RE_PRELOGIN_TOKEN = 'name="_csrf_token" value="(.*)" *>'
-IMA_URL_LOGIN = "https://www.imaprotect.com/fr/client/login_check"
-IMA_URL_LOGOUT = "https://www.imaprotect.com/fr/client/logout"
-IMA_URL_STATUS = "https://www.imaprotect.com/fr/client/management/status"
-IMA_URL_CONTACTLIST = "https://www.imaprotect.com/fr/client/contact/list"
-IMA_URL_IMAGES = "https://www.imaprotect.com/fr/client/management/captureList"
-RE_ALARM_TOKEN = 'alarm-status ref="myAlarm" data-token="(.*)"'
+IMA_URL_LOGIN = IMA_URL_ROOT + "/fr/client/login_check"
+IMA_URL_LOGOUT = IMA_URL_ROOT + "/fr/client/logout"
+IMA_URL_STATUS = IMA_URL_ROOT + "/fr/client/management/status"
+IMA_URL_CONTACTLIST = IMA_URL_ROOT + "/fr/client/contact/list"
+IMA_URL_IMAGES = IMA_URL_ROOT + "/fr/client/management/captureList"
+RE_ALARM_TOKEN = 'ref="myAlarm" data-token="(.*)"'
 IMA_CONTACTLIST_JSONPATH = "$..contactList"
 IMA_COOKIENAME_EXPIRE = "imainternational"
 
@@ -120,7 +120,7 @@ class IMAProtect:
             current_path = dest + camera["name"]
             os.makedirs(current_path, exist_ok=True)
             for image in camera["images"]:
-                r = self._session.get(image, allow_redirects=True)
+                r = self._session.get(IMA_URL_ROOT + image, allow_redirects=True)
                 if r.status_code == 200:
                     with open(
                         current_path
