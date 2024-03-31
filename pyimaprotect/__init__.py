@@ -27,7 +27,7 @@ IMA_URL_LOGOUT = IMA_URL_ROOT + "/fr/client/logout"
 IMA_URL_STATUS = IMA_URL_ROOT + "/fr/client/management/status"
 IMA_URL_CONTACTLIST = IMA_URL_ROOT + "/fr/client/contact/list"
 IMA_URL_IMAGES = IMA_URL_ROOT + "/fr/client/management/captureList"
-RE_ALARM_TOKEN = 'ref="myAlarm" data-token="(.*)"'
+RE_ALARM_TOKEN = 'alarm-status token="(.*)"'
 IMA_CONTACTLIST_JSONPATH = "$..contactList"
 IMA_COOKIENAME_EXPIRE = "imainternational"
 
