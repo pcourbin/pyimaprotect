@@ -2,7 +2,7 @@
 
 __author__ = """Pierre COURBIN"""
 __email__ = "pierre.courbin@gmail.com"
-__version__ = "3.1.5"
+__version__ = "3.1.6"
 
 import requests
 import logging
@@ -18,6 +18,7 @@ _LOGGER = logging.getLogger(__name__)
 
 def invert_dict(current_dict: dict):
     return {v: k for k, v in current_dict.items()}
+
 
 IMA_URL_ROOT = "https://www.imaprotect.com"
 IMA_URL_PRELOGIN = IMA_URL_ROOT + "/fr/client/login"
