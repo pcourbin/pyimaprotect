@@ -153,7 +153,7 @@ class IMAProtect:
         if force or self._session is None or self._expire < datetime.now():
 
             options = Options()
-            options.add_argument("--headless")  # Remove this if you want to see the browser (Headless makes the chromedriver not have a GUI)
+            options.add_argument("--headless")  # Remove this if you want to see the browser (Headless makes the Firefox driver not have a GUI)
             options.add_argument("--window-size=1920,1080")
             options.add_argument(f'--user-agent={USER_AGENT}')
             options.add_argument('--no-sandbox')
