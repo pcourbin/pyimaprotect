@@ -207,7 +207,6 @@ class IMAProtect:
                             _LOGGER.error(f"Error parsing session expiry: {e}")
 
                 # Get the status token from the page source
-                #url = "https://www.imaprotect.com/fr/client/"
                 response = self._session.get(driver.current_url)
                 if (response.status_code == 200):
                     token_search = re.findall(RE_ALARM_TOKEN, response.text)
