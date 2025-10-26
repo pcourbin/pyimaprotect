@@ -204,7 +204,7 @@ class IMAProtect:
                         try:
                             self._expire = datetime.fromtimestamp(cookie["expiry"])
                         except Exception as e:
-                            _LOGGER.error("Error parsing session expiry: %s" % (e))
+                            _LOGGER.error(f"Error parsing session expiry: {e}")
 
                 # Get the status token from the page source
                 #url = "https://www.imaprotect.com/fr/client/"
