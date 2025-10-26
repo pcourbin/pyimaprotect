@@ -13,12 +13,18 @@ from jsonpath_ng import parse
 from datetime import datetime
 from .exceptions import IMAProtectConnectError
 
-_LOGGER = logging.getLogger(__name__)
+from selenium.webdriver.common.by import By
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
+_LOGGER = logging.getLogger(__name__)
 
 def invert_dict(current_dict: dict):
     return {v: k for k, v in current_dict.items()}
 
+USER_AGENT = 'Mozilla/5.0 (Windows NT 4.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36'
 
 IMA_URL_ROOT = "https://www.imaprotect.com"
 IMA_URL_PRELOGIN = IMA_URL_ROOT + "/fr/client/login"
@@ -26,11 +32,12 @@ RE_PRELOGIN_TOKEN = 'name="_csrf_token" value="(.*)" *>'
 IMA_URL_LOGIN = IMA_URL_ROOT + "/fr/client/login_check"
 IMA_URL_LOGOUT = IMA_URL_ROOT + "/fr/client/logout"
 IMA_URL_STATUS = IMA_URL_ROOT + "/fr/client/management/status"
-IMA_URL_CONTACTLIST = IMA_URL_ROOT + "/fr/client/contact/list"
+IMA_URL_CONTACTLIST = IMA_URL_ROOT + "/fr/client/contract"
 IMA_URL_IMAGES = IMA_URL_ROOT + "/fr/client/management/captureList"
 RE_ALARM_TOKEN = 'alarm-status token="(.*)"'
-IMA_CONTACTLIST_JSONPATH = "$..contactList"
+IMA_CONTACTLIST_JSONPATH = "$..persons"
 IMA_COOKIENAME_EXPIRE = "imainternational"
+IMA_URL_CHANGE_CONTRACT = IMA_URL_ROOT + "/fr/client/change-contract/{}"
 
 STATUS_IMA_TO_NUM = {"off": 0, "partial": 1, "on": 2}
 STATUS_NUM_TO_IMA = invert_dict(STATUS_IMA_TO_NUM)
@@ -40,9 +47,10 @@ STATUS_NUM_TO_TEXT = {0: "OFF", 1: "PARTIAL", 2: "ON", -1: "UNKNOWN"}
 class IMAProtect:
     """Class representing the IMA Protect Alarm and its API"""
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, contract_number=None):
         self._username = username
         self._password = password
+        self._contract_number = contract_number
         self._session = None
         self._token_login = None
         self._token_status = None
@@ -143,47 +151,64 @@ class IMAProtect:
 
     def login(self, force: bool = False):
         if force or self._session is None or self._expire < datetime.now():
-            self._session = requests.Session()
 
-            url = IMA_URL_PRELOGIN
-            response = self._session.get(IMA_URL_PRELOGIN)
-            if response.status_code == 200:
-                token_search = re.findall(
-                    RE_PRELOGIN_TOKEN,
-                    re.sub(" +", " ", response.text),
-                )
-                if len(token_search) > 0:
-                    self._token_login = token_search[0]
-                else:
+            options = Options()
+            options.add_argument("--headless")  # Remove this if you want to see the browser (Headless makes the Firefox driver not have a GUI)
+            options.add_argument("--window-size=1920,1080")
+            options.add_argument(f'--user-agent={USER_AGENT}')
+            options.add_argument('--no-sandbox')
+            options.add_argument("--disable-extensions")
+
+            driver = webdriver.Firefox(options=options)
+
+            try:
+                driver.get(IMA_URL_PRELOGIN)
+                try:
+                    elem = driver.find_element(By.NAME, "_csrf_token")
+                    self._token_login = elem.get_attribute("value")
+                    if not self._token_login:
+                        _LOGGER.error("CSRF token found but without value on the pre-login page.")
+                except Exception:
                     self._token_login = None
-                    _LOGGER.error(
-                        """Can't get the token to login, step 'Login/TokenLogin'.
-                        Please, contact the developer."""
-                    )
-            else:
-                self._session = None
-                raise IMAProtectConnectError(response.status_code, response.text)
+                    _LOGGER.error("CSRF token not found on the pre-login page. Check that the page loaded correctly or increase the timeout.")
 
-            if self._token_login is not None:
-                url = IMA_URL_LOGIN
-                login = {
-                    "_username": self._username,
-                    "_password": self._password,
-                    "_csrf_token": self._token_login,
+                username = driver.find_element(By.NAME, "_username")
+                username.send_keys(self._username)
+
+                password = driver.find_element(By.NAME, "_password")
+                password.send_keys(self._password)
+
+                # submit the login form
+                driver.find_element(By.CLASS_NAME, "form-signin").submit()
+
+                # wait for URL to change with 15 seconds timeout
+                WebDriverWait(driver, 15).until(EC.url_changes(IMA_URL_PRELOGIN))
+
+                if (driver.current_url == IMA_URL_PRELOGIN) or (self._token_login is None):
+                    raise IMAProtectConnectError(400, "Login failed. Please check your credentials. Can't connect to the IMAProtect Website, step 'Login'. Please, check your logins. You must be able to login on https://www.imaprotect.com.")
+
+                # Navigate to change contract page if contract number is provided
+                if self._contract_number is not None:
+                    driver.get(IMA_URL_CHANGE_CONTRACT.format(self._contract_number))
+
+                # Create a requests session and transfer cookies from Selenium
+                self._session = requests.Session()
+                headers = {
+                    "User-Agent": USER_AGENT,
                 }
+                self._session.headers.update(headers)
+                for cookie in driver.get_cookies():
+                    c = {cookie["name"]: cookie["value"]}
+                    self._session.cookies.update(c)
+                    if cookie["name"] == IMA_COOKIENAME_EXPIRE:
+                        try:
+                            self._expire = datetime.fromtimestamp(cookie["expiry"])
+                        except Exception as e:
+                            _LOGGER.error(f"Error parsing session expiry: {e}")
 
-                response = self._session.post(url, data=login)
-                for cookie in self._session.cookies:
-                    if cookie.name == IMA_COOKIENAME_EXPIRE:
-                        self._expire = datetime.fromtimestamp(cookie.expires)
-
-                if response.status_code == 400:
-                    _LOGGER.error(
-                        """Can't connect to the IMAProtect Website, step 'Login'.
-                        Please, check your logins. You must be able to login on https://www.imaprotect.com."""
-                    )
-                    raise IMAProtectConnectError(response.status_code, response.text)
-                elif response.status_code == 200:
+                # Get the status token from the page source
+                response = self._session.get(driver.current_url)
+                if (response.status_code == 200):
                     token_search = re.findall(RE_ALARM_TOKEN, response.text)
                     if len(token_search) > 0:
                         self._token_status = token_search[0]
@@ -193,9 +218,14 @@ class IMAProtect:
                             """Can't get the token to read the status, step 'Login/TokenStatus'.
                             Please, check your logins. You must be able to login on https://www.imaprotect.com."""
                         )
-                else:
-                    self._session = None
-                    raise IMAProtectConnectError(response.status_code, response.text)
+            except Exception as e:
+                self._session = None
+                raise IMAProtectConnectError(0, str(e))
+            finally:
+                try:
+                    driver.quit()
+                except Exception:
+                    pass
 
         return self._session
 
