@@ -4,12 +4,12 @@ import logging
 import os
 import shutil
 from os import path
-from pyimaprotect import cli
-from pyimaprotect import IMAProtect
-from pyimaprotect.exceptions import IMAProtectConnectError
 
 from click.testing import CliRunner
 from dotenv import load_dotenv
+from pyimaprotect import cli
+from pyimaprotect import IMAProtect
+from pyimaprotect.exceptions import IMAProtectConnectError
 
 _LOGGER = logging.getLogger(__name__)
 load_dotenv()
