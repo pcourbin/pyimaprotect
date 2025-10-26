@@ -60,6 +60,7 @@ Since the last update of IMAProtect "API" (05/2021), this plugin allows you to:
 
   from pyimaprotect import IMAProtect, STATUS_NUM_TO_TEXT
   ima = IMAProtect('myusername','mysuperpassword')
+  # ima = IMAProtect('myusername','mysuperpassword', 'contractid') # If you have multiple contracts
 
   print("# Get Status")
   imastatus = ima.status

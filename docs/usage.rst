@@ -7,6 +7,7 @@ To use pyimaprotect in a project::
     from pyimaprotect import IMAProtect, STATUS_NUM_TO_TEXT
 
     ima = IMAProtect('myusername','mysuperpassword')
+    # ima = IMAProtect('myusername','mysuperpassword', 'contractid') # If you have multiple contracts
 
     print("# Get Status")
     imastatus = ima.status
