@@ -12,6 +12,8 @@ with open("HISTORY.rst") as history_file:
 requirements = [
     "Click>=7.0",
     "jsonpath_ng>=1.5.2",
+    "selenium>=4.38.0",
+    "requests>=2.32.5",
 ]
 
 setup_requirements = [
