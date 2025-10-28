@@ -174,3 +174,4 @@ Credits
 .. _`black`: https://github.com/psf/black
 .. _`user_profile`: https://github.com/pcourbin
 .. _`buymecoffee`: https://www.buymeacoffee.com/pcourbin
+.. _`selenium/standalone-firefox`: https://hub.docker.com/r/selenium/standalone-firefox
