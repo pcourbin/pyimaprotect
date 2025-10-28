@@ -110,7 +110,7 @@ Parameters
 - `remote_webdriver` (optional): URL of the remote webdriver server if you use one (e.g. `http://localhost:4444`).
 
 Using the remote_webdriver parameter
------------------------------------
+====================================
 Using the remote_webdriver parameter is useful if you are using a selenium server like the `selenium/standalone-firefox`_ docker image.
 .. note:: Example docker-compose to run a Selenium standalone-firefox server (use as remote_webdriver)
 
