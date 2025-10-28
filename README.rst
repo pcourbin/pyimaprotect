@@ -60,7 +60,8 @@ Since the last update of IMAProtect "API" (05/2021), this plugin allows you to:
 
   from pyimaprotect import IMAProtect, STATUS_NUM_TO_TEXT
   ima = IMAProtect('myusername','mysuperpassword')
-  # ima = IMAProtect('myusername','mysuperpassword', 'contractid') # If you have multiple contracts
+  # Use contract_number if you have multiple contracts and remote_webdriver if you use a remote webdriver for selenium, see https://hub.docker.com/r/selenium/standalone-firefox
+  # ima = IMAProtect(username='myusername', password='mysuperpassword', contract_number='contractid', remote_webdriver='http://localhost:4444')
 
   print("# Get Status")
   imastatus = ima.status
@@ -105,6 +106,28 @@ Parameters
 
 - `username`: Username used to connect to https://www.imaprotect.com/
 - `password`: Password used to connect to https://www.imaprotect.com/
+- `contract_number` (optional): Contract number if you have multiple contracts.
+- `remote_webdriver` (optional): URL of the remote webdriver server if you use one (e.g. `http://localhost:4444`).
+
+Using the remote_webdriver parameter
+-----------------------------------
+Using the remote_webdriver parameter is useful if you are using a selenium server like the `selenium/standalone-firefox`_ docker image.
+.. note:: Example docker-compose to run a Selenium standalone-firefox server (use as remote_webdriver)
+
+.. code-block:: yaml
+
+  services:
+    firefox:
+      image: selenium/standalone-firefox:143.0-20251020
+      shm_size: 2g
+      ports:
+        - "4444:4444"
+        - "7900:7900"
+
+# Usage:
+# 1. Save this as docker-compose.yml in the project folder.
+# 2. Start with: docker-compose up -d
+# 3. Use remote_webdriver='http://localhost:4444' when creating IMAProtect.
 
 Methods
 =======

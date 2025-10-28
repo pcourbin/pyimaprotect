@@ -43,14 +43,14 @@ STATUS_IMA_TO_NUM = {"off": 0, "partial": 1, "on": 2}
 STATUS_NUM_TO_IMA = invert_dict(STATUS_IMA_TO_NUM)
 STATUS_NUM_TO_TEXT = {0: "OFF", 1: "PARTIAL", 2: "ON", -1: "UNKNOWN"}
 
-
 class IMAProtect:
     """Class representing the IMA Protect Alarm and its API"""
 
-    def __init__(self, username, password, contract_number=None):
+    def __init__(self, username, password, contract_number=None, remote_webdriver=None):
         self._username = username
         self._password = password
         self._contract_number = contract_number
+        self._remote_webdriver = remote_webdriver
         self._session = None
         self._token_login = None
         self._token_status = None
@@ -153,13 +153,16 @@ class IMAProtect:
         if force or self._session is None or self._expire < datetime.now():
 
             options = Options()
-            options.add_argument("--headless")  # Remove this if you want to see the browser (Headless makes the Firefox driver not have a GUI)
+            options.add_argument("--headless")  # Remove this if you want to see the browser (Headless makes the Web driver not have a GUI)
             options.add_argument("--window-size=1920,1080")
             options.add_argument(f'--user-agent={USER_AGENT}')
             options.add_argument('--no-sandbox')
             options.add_argument("--disable-extensions")
 
-            driver = webdriver.Firefox(options=options)
+            if self._remote_webdriver is not None:
+                driver = webdriver.Remote(command_executor=self._remote_webdriver, options=options)
+            else:
+                driver = webdriver.Firefox(options=options)
 
             try:
                 driver.get(IMA_URL_PRELOGIN)

@@ -7,7 +7,8 @@ To use pyimaprotect in a project::
     from pyimaprotect import IMAProtect, STATUS_NUM_TO_TEXT
 
     ima = IMAProtect('myusername','mysuperpassword')
-    # ima = IMAProtect('myusername','mysuperpassword', 'contractid') # If you have multiple contracts
+    # Use contract_number if you have multiple contracts and remote_webdriver if you use a remote webdriver for selenium, see https://hub.docker.com/r/selenium/standalone-firefox
+    # ima = IMAProtect(username='jmyusername', password='mysuperpassword', contract_number='contractid', remote_webdriver='http://localhost:4444')
 
     print("# Get Status")
     imastatus = ima.status
