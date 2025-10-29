@@ -2,6 +2,12 @@
 History
 =======
 
+3.2.3 (2025-10-29)
+------------------
+* Add timeout parameter to IMAProtect to set a custom timeout for selenium webdriver waits.
+* Add headless parameter to IMAProtect to run selenium in headless mode.
+
+
 3.2.2 (2025-10-28)
 ------------------
 * Update login procedure since IMA Protect login page changed again..., thanks to `@falconslag`_

@@ -43,13 +43,17 @@ STATUS_IMA_TO_NUM = {"off": 0, "partial": 1, "on": 2}
 STATUS_NUM_TO_IMA = invert_dict(STATUS_IMA_TO_NUM)
 STATUS_NUM_TO_TEXT = {0: "OFF", 1: "PARTIAL", 2: "ON", -1: "UNKNOWN"}
 
+SELENIUM_WEBDRIVER_TIMEOUT = 15  # seconds
+
 class IMAProtect:
     """Class representing the IMA Protect Alarm and its API"""
 
-    def __init__(self, username, password, contract_number=None, remote_webdriver=None):
+    def __init__(self, username, password, contract_number=None, headless=False, timeout=SELENIUM_WEBDRIVER_TIMEOUT, remote_webdriver=None):
         self._username = username
         self._password = password
         self._contract_number = contract_number
+        self._headless = headless
+        self._timeout = timeout
         self._remote_webdriver = remote_webdriver
         self._session = None
         self._token_login = None
@@ -153,7 +157,8 @@ class IMAProtect:
         if force or self._session is None or self._expire < datetime.now():
 
             options = Options()
-            options.add_argument("--headless")  # Remove this if you want to see the browser (Headless makes the Web driver not have a GUI)
+            if self._headless:
+                options.add_argument("--headless") # Remove this if you want to see the browser (Headless makes the Web driver not have a GUI)
             options.add_argument("--window-size=1920,1080")
             options.add_argument(f'--user-agent={USER_AGENT}')
             options.add_argument('--no-sandbox')
@@ -184,8 +189,8 @@ class IMAProtect:
                 # submit the login form
                 driver.find_element(By.CLASS_NAME, "form-signin").submit()
 
-                # wait for URL to change with 15 seconds timeout
-                WebDriverWait(driver, 15).until(EC.url_changes(IMA_URL_PRELOGIN))
+                # wait for URL to change with self._timeout seconds timeout
+                WebDriverWait(driver, self._timeout).until(EC.url_changes(IMA_URL_PRELOGIN))
 
                 if (driver.current_url == IMA_URL_PRELOGIN) or (self._token_login is None):
                     raise IMAProtectConnectError(400, "Login failed. Please check your credentials. Can't connect to the IMAProtect Website, step 'Login'. Please, check your logins. You must be able to login on https://www.imaprotect.com.")

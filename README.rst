@@ -60,8 +60,8 @@ Since the last update of IMAProtect "API" (05/2021), this plugin allows you to:
 
   from pyimaprotect import IMAProtect, STATUS_NUM_TO_TEXT
   ima = IMAProtect('myusername','mysuperpassword')
-  # Use contract_number if you have multiple contracts and remote_webdriver if you use a remote webdriver for selenium, see https://hub.docker.com/r/selenium/standalone-firefox
-  # ima = IMAProtect(username='myusername', password='mysuperpassword', contract_number='contractid', remote_webdriver='http://localhost:4444')
+  # Use contract_number if you have multiple contracts, headless if you want to run in headless mode, timeout if you want to set a custom timeout and remote_webdriver if you use a remote webdriver for selenium, see https://hub.docker.com/r/selenium/standalone-firefox
+  # ima = IMAProtect(username='myusername', password='mysuperpassword', contract_number='contractid', headless=True, timeout=30, remote_webdriver='http://localhost:4444')
 
   print("# Get Status")
   imastatus = ima.status
@@ -118,7 +118,7 @@ Using the remote_webdriver parameter is useful if you are using a selenium serve
 
   services:
     firefox:
-      image: selenium/standalone-firefox:143.0-20251020
+      image: selenium/standalone-firefox:130.0-20251025
       shm_size: 2g
       ports:
         - "4444:4444"
