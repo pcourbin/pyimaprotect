@@ -2,6 +2,12 @@
 History
 =======
 
+3.2.5 (2025-10-30)
+------------------
+* Add support for multiple user agents in IMAProtect.
+* Improve error handling and logging.
+* Add simulate_typing_to_element method to IMAProtect to simulate human-like typing in input fields thanks to `@falconslag`_
+
 3.2.3 (2025-10-29)
 ------------------
 * Add timeout parameter to IMAProtect to set a custom timeout for selenium webdriver waits.
