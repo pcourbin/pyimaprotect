@@ -15,6 +15,8 @@ from datetime import datetime, time
 from .exceptions import IMAProtectConnectError
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -176,6 +178,31 @@ class IMAProtect:
         response_json = json.loads(response.content)
         return response_json
 
+    # Simulate typing with occasional mistakes, proposed by @falconslag
+    def simulate_typing_with_mistakes(self, text, mistake_probability=0.05):
+        result = []
+        for char in text:
+            if random.random() < mistake_probability:
+                # Simulate a typo
+                wrong_char = random.choice('abcdefghijklmnopqrstuvwxyz')
+                result.append(wrong_char)
+                result.append(Keys.BACKSPACE)
+            result.append(char)
+        return result
+    
+    def simulate_typing_to_element(self, driver, element, text, mistake_probability=0.05):
+        actions = ActionChains(driver)
+        #actions.move_to_element(element)
+        actions.click(on_element=element)
+        # local typing delay bounds (seconds)
+        _min_delay = 0.05
+        _max_delay = 0.2
+        text_to_input = self.simulate_typing_with_mistakes(text, mistake_probability)
+        for character in text_to_input:
+            actions.send_keys(character)
+            actions.pause(random.uniform(_min_delay, _max_delay))
+        actions.perform()
+
     def login(self, force: bool = False):
         if force or self._session is None or self._expire < datetime.now():
 
@@ -205,15 +232,27 @@ class IMAProtect:
                     self._token_login = None
                     _LOGGER.error("CSRF token not found on the pre-login page. Check that the page loaded correctly or increase the timeout.")
 
+                # Handle cookie consent popup if present
+                time.sleep(1)  # wait for possible popups to load
+                popup_candidates = driver.find_elements(
+                    By.XPATH,
+                    (
+                        "//span[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'accept')]"
+                    )
+                )
+                popup_accept = popup_candidates[0] if popup_candidates else None
+                if popup_accept:
+                    _LOGGER.info("Cookie consent popup found.")
+                    popup_accept.click()
+
+                # Fill in the login form
+                _LOGGER.info("Simulating typing username...")
                 username = driver.find_element(By.NAME, "_username")
-                username.send_keys(self._username)
+                self.simulate_typing_to_element(driver, username, self._username)
 
-                time.sleep(1)  # simulate human wait time
-
+                _LOGGER.info("Simulating typing password...")
                 password = driver.find_element(By.NAME, "_password")
-                password.send_keys(self._password)
-
-                time.sleep(1)  # simulate human wait time
+                self.simulate_typing_to_element(driver, password, self._password)
 
                 # submit the login form
                 driver.find_element(By.CLASS_NAME, "form-signin").submit()
