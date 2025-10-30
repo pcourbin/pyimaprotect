@@ -125,9 +125,9 @@ Using the remote_webdriver parameter is useful if you are using a selenium serve
         - "7900:7900"
 
 # Usage:
-# 1. Save this as docker-compose.yml in the project folder.
-# 2. Start with: docker-compose up -d
-# 3. Use remote_webdriver='http://localhost:4444' when creating IMAProtect.
+- 1. Save this as docker-compose.yml in the project folder.
+- 2. Start with: docker-compose up -d
+- 3. Use remote_webdriver='http://localhost:4444' when creating IMAProtect.
 
 Methods
 =======

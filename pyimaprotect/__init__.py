@@ -4,13 +4,14 @@ __author__ = """Pierre COURBIN"""
 __email__ = "pierre.courbin@gmail.com"
 __version__ = "3.2.3"
 
+import random
 import requests
 import logging
 import re
 import json
 import os
 from jsonpath_ng import parse
-from datetime import datetime
+from datetime import datetime, time
 from .exceptions import IMAProtectConnectError
 
 from selenium.webdriver.common.by import By
@@ -18,13 +19,20 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 _LOGGER = logging.getLogger(__name__)
 
 def invert_dict(current_dict: dict):
     return {v: k for k, v in current_dict.items()}
 
-USER_AGENT = 'Mozilla/5.0 (Windows NT 4.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36'
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+    "Mozilla/5.0 (iPhone14,3; U; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19A346 Safari/602.1"
+    # Add more User-Agent strings as needed
+]
 
 IMA_URL_ROOT = "https://www.imaprotect.com"
 IMA_URL_PRELOGIN = IMA_URL_ROOT + "/fr/client/login"
@@ -43,7 +51,7 @@ STATUS_IMA_TO_NUM = {"off": 0, "partial": 1, "on": 2}
 STATUS_NUM_TO_IMA = invert_dict(STATUS_IMA_TO_NUM)
 STATUS_NUM_TO_TEXT = {0: "OFF", 1: "PARTIAL", 2: "ON", -1: "UNKNOWN"}
 
-SELENIUM_WEBDRIVER_TIMEOUT = 15  # seconds
+SELENIUM_WEBDRIVER_TIMEOUT = 10  # seconds
 
 class IMAProtect:
     """Class representing the IMA Protect Alarm and its API"""
@@ -55,6 +63,7 @@ class IMAProtect:
         self._headless = headless
         self._timeout = timeout
         self._remote_webdriver = remote_webdriver
+        self._user_agents = USER_AGENTS
         self._session = None
         self._token_login = None
         self._token_status = None
@@ -106,6 +115,20 @@ class IMAProtect:
                 Please, check your logins. You must be able to login on https://www.imaprotect.com."""
             )
 
+    @property
+    def user_agents(self):
+        """Return the user agents list."""
+        return self._user_agents
+
+    def get_user_agent(self):
+        """Return a random user agent."""
+        return random.choice(self.user_agents)
+    
+    def add_user_agent(self, user_agent: str):
+        """Add a user agent to the list."""
+        if user_agent not in self._user_agents:
+            self._user_agents.append(user_agent)
+
     def get_contact_list(self):
         self.login()
         url = IMA_URL_CONTACTLIST
@@ -156,11 +179,13 @@ class IMAProtect:
     def login(self, force: bool = False):
         if force or self._session is None or self._expire < datetime.now():
 
+            random_user_agent = self.get_user_agent()
+
             options = Options()
             if self._headless:
                 options.add_argument("--headless") # Remove this if you want to see the browser (Headless makes the Web driver not have a GUI)
             options.add_argument("--window-size=1920,1080")
-            options.add_argument(f'--user-agent={USER_AGENT}')
+            options.add_argument(f'--user-agent={random_user_agent}')
             options.add_argument('--no-sandbox')
             options.add_argument("--disable-extensions")
 
@@ -183,17 +208,30 @@ class IMAProtect:
                 username = driver.find_element(By.NAME, "_username")
                 username.send_keys(self._username)
 
+                time.sleep(1)  # simulate human wait time
+
                 password = driver.find_element(By.NAME, "_password")
                 password.send_keys(self._password)
+
+                time.sleep(1)  # simulate human wait time
 
                 # submit the login form
                 driver.find_element(By.CLASS_NAME, "form-signin").submit()
 
                 # wait for URL to change with self._timeout seconds timeout
-                WebDriverWait(driver, self._timeout).until(EC.url_changes(IMA_URL_PRELOGIN))
+                try:
+                    WebDriverWait(driver, self._timeout).until(EC.url_changes(IMA_URL_PRELOGIN))
+                except Exception:
+                    _LOGGER.error("Timeout waiting for URL to change after login. Check your credentials or increase the timeout.")
 
                 if (driver.current_url == IMA_URL_PRELOGIN) or (self._token_login is None):
-                    raise IMAProtectConnectError(400, "Login failed. Please check your credentials. Can't connect to the IMAProtect Website, step 'Login'. Please, check your logins. You must be able to login on https://www.imaprotect.com.")
+                    alerts = driver.find_elements(By.CLASS_NAME, "alert")
+                    if len(alerts) > 0:
+                        alert_texts = [alert.text for alert in alerts]
+                        _LOGGER.error(f"Login failed, alert(s) found on the page: {alert_texts}. USER_AGENT used: {random_user_agent}")
+                        raise IMAProtectConnectError(400, f"Login failed, alert(s) found on the page: {alert_texts}. USER_AGENT used: {random_user_agent}")
+                    else:
+                        raise IMAProtectConnectError(400, "Login failed. Please check your credentials. Can't connect to the IMAProtect Website, step 'Login'. Please, check your logins. You must be able to login on https://www.imaprotect.com.")
 
                 # Navigate to change contract page if contract number is provided
                 if self._contract_number is not None:
@@ -202,7 +240,7 @@ class IMAProtect:
                 # Create a requests session and transfer cookies from Selenium
                 self._session = requests.Session()
                 headers = {
-                    "User-Agent": USER_AGENT,
+                    "User-Agent": random_user_agent,
                 }
                 self._session.headers.update(headers)
                 for cookie in driver.get_cookies():
